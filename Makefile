@@ -51,3 +51,22 @@ repository-tarball:
 
 clean:
 	rm -f *.o *.$(TAREXT) randall
+
+# Unit test that checks NBYTES.
+check: randall
+	@echo "Running test cases..."
+	@echo "=========== TEST 1 ==========="
+@./randall 20 | wc -c | (grep -q "^20$$" && echo "PASSED") || (echo "FAILED" && false)
+# Automatically formats all of your C code.
+format:
+	clang-format -i *.c *.h
+# Helps find memory leaks. For an explanation on each flag, see this link.
+valgrind: randall
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ./randall 100
+# Runs the Undefined Behavior (UBSAN) and Address (ASAN) sanitizers. GCC doesn’t support these on the SEASNet servers so we recommend using clang instead (a different C compiler).
+sanitizers:
+	clang -g3 -Wall -Wextra -mtune-native -mrdrnd -fsanitize=address \
+		-fsanitize=undefined *.c -o randall
+
+# Make sure to add these rules to .PHONY. These tells make that it should not look for files called each of these recipe targets.
+.PHONY: default clean assignment submission-tarball repository-tarball check format valgrind sanitizers

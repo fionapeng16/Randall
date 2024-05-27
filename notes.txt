@@ -1,0 +1,3 @@
+run export PATH=/usr/local/cs/bin:$PATH to add the latest version of GCC to your path
+
+added notes.txt to randall.c
