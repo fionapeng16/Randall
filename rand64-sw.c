@@ -6,8 +6,7 @@
 FILE *urandstream;
 
 /* Initialize the software rand64 implementation.  */
-void
-software_rand64_init (void)
+void software_rand64_init (void)
 {
   urandstream = fopen ("/dev/random", "r");
   if (! urandstream)
@@ -15,8 +14,7 @@ software_rand64_init (void)
 }
 
 /* Return a random value, using software operations.  */
-unsigned long long
-software_rand64 (void)
+unsigned long long software_rand64 (void)
 {
   unsigned long long int x;
   if (fread (&x, sizeof x, 1, urandstream) != 1)
@@ -25,23 +23,7 @@ software_rand64 (void)
 }
 
 /* Finalize the software rand64 implementation.  */
-void
-software_rand64_fini (void)
+void software_rand64_fini (void)
 {
   fclose (urandstream);
-}
-
-bool
-writebytes (unsigned long long x, int nbytes)
-{
-  do
-    {
-      if (putchar (x) < 0)
-	return false;
-      x >>= CHAR_BIT;
-      nbytes--;
-    }
-  while (0 < nbytes);
-
-  return true;
 }
