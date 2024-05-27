@@ -1,7 +1,4 @@
 #include "options.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
 
 long long handle_nbytes(int argc, char **argv) {
     bool valid = false;
