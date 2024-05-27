@@ -13,7 +13,7 @@
 # General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Optimization level.  Change this -O2 to -Og or -O0 or whatever.
 OPTIMIZE =
@@ -31,7 +31,7 @@ TAREXT = tgz
 default: randall
 
 randall: randall.c
-	$(CC) $(CFLAGS) $@.c -o $@
+	$(CC) $(CFLAGS) -o $@ $<
 
 assignment: randall-assignment.$(TAREXT)
 assignment-files = COPYING Makefile randall.c
@@ -39,8 +39,7 @@ randall-assignment.$(TAREXT): $(assignment-files)
 	$(TAR) $(TARFLAGS) -cf $@ $(assignment-files)
 
 submission-tarball: randall-submission.$(TAREXT)
-submission-files = $(assignment-files) \
-  notes.txt # More files should be listed here, as needed.
+submission-files = $(assignment-files) notes.txt # More files should be listed here, as needed.
 randall-submission.$(TAREXT): $(submission-files)
 	$(TAR) $(TARFLAGS) -cf $@ $(submission-files)
 
@@ -56,17 +55,20 @@ clean:
 check: randall
 	@echo "Running test cases..."
 	@echo "=========== TEST 1 ==========="
-@./randall 20 | wc -c | (grep -q "^20$$" && echo "PASSED") || (echo "FAILED" && false)
+	@./randall 20 | wc -c | (grep -q "^20$$" && echo "PASSED") || (echo "FAILED" && false)
+
 # Automatically formats all of your C code.
 format:
 	clang-format -i *.c *.h
+
 # Helps find memory leaks. For an explanation on each flag, see this link.
 valgrind: randall
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ./randall 100
+
 # Runs the Undefined Behavior (UBSAN) and Address (ASAN) sanitizers. GCC doesn’t support these on the SEASNet servers so we recommend using clang instead (a different C compiler).
 sanitizers:
 	clang -g3 -Wall -Wextra -mtune-native -mrdrnd -fsanitize=address \
-		-fsanitize=undefined *.c -o randall
+		-fsanitize=undefined -o randall *.c
 
 # Make sure to add these rules to .PHONY. These tells make that it should not look for files called each of these recipe targets.
 .PHONY: default clean assignment submission-tarball repository-tarball check format valgrind sanitizers
