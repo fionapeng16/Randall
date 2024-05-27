@@ -1,3 +1,13 @@
 run export PATH=/usr/local/cs/bin:$PATH to add the latest version of GCC to your path
 
 added notes.txt to randall.c
+
+refactoring:
+each .h file should have #include headers, example:
+#ifndef RAND64_SW_H
+#define RAND64_SW_H
+...
+#endif // RAND64_SW_H
+and the required headers and function prototypes. 
+the .c files should have only #include the .h file file.
+in main, you need to #include the header file too
