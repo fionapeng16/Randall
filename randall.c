@@ -22,6 +22,9 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
+//hearder libraries
+#include <getopt.h>
+
 //header files
 #include "rand64-hw.h"
 #include "rand64-sw.h"
@@ -31,32 +34,56 @@
 /* Main program, which outputs N bytes of random data.  */
 int main (int argc, char **argv)
 {
+    char *input = "rdrand";
+    char *output = "stdio";
 
-  long long nbytes = handle_nbytes(argc, argv);
-  if (nbytes == 0)
-      return 0;
+    int opt;
+    while ((opt = getopt(argc, argv, "i:o:")) != -1) {
+        switch (opt) {
+            case 'i':
+                input = optarg;
+                break;
+            case 'o':
+                output = optarg;
+                break;
+            default: // '?' for unrecognized option
+                fprintf(stderr, "Usage: %s [-i input] [-o output] NBYTES\n", argv[0]);
+                exit(EXIT_FAILURE);
+        }
+    }
 
-  void (*initialize)(void);
-  unsigned long long (*rand64)(void);
-  void (*finalize)(void);
-  if (rdrand_supported()) {
-      initialize = hardware_rand64_init;
-      rand64 = hardware_rand64;
-      finalize = hardware_rand64_fini;
-  } else {
-      initialize = software_rand64_init;
-      rand64 = software_rand64;
-      finalize = software_rand64_fini;
-  }
+    if (optind >= argc) {
+        fprintf(stderr, "Expected argument after options\n");
+        exit(EXIT_FAILURE);   
+    }
 
-  initialize();
-  int result = handle_output(nbytes, rand64);
-  finalize();
-  
-  if (result != 0) {
-      perror("output");
-      return result;
-  }
+    long long nbytes = handle_nbytes(argc, argv, optind);
+    if (nbytes == 0)
+        return 0;
 
-  return 0;
+    printf("Input: %s\nOutput: %s\n", input, output);
+
+    void (*initialize)(void);
+    unsigned long long (*rand64)(void);
+    void (*finalize)(void);
+    if (rdrand_supported()) {
+        initialize = hardware_rand64_init;
+        rand64 = hardware_rand64;
+        finalize = hardware_rand64_fini;
+    } else {
+        initialize = software_rand64_init;
+        rand64 = software_rand64;
+        finalize = software_rand64_fini;
+    }
+
+    initialize();
+    int result = handle_output(nbytes, rand64);
+    finalize();
+
+    if (result != 0) {
+        perror("output");
+        return result;
+    }
+
+    return 0;
 }

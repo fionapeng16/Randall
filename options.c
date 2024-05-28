@@ -1,14 +1,14 @@
 #include "options.h"
 
-long long handle_nbytes(int argc, char **argv) {
+long long handle_nbytes(int argc, char **argv, int index) {
     bool valid = false;
     long long nbytes = 0;
-    if (argc == 2) {
+    if (argc > index) {
         char *endptr;
         errno = 0;
-        nbytes = strtoll(argv[1], &endptr, 10);
+        nbytes = strtoll(argv[index], &endptr, 10);
         if (errno)
-            perror(argv[1]);
+            perror(argv[index]);
         else
             valid = !*endptr && 0 <= nbytes;
     }
