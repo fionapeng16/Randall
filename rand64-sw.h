@@ -14,4 +14,6 @@ unsigned long long software_rand64 (void);
 
 void software_rand64_fini (void);
 
+void software_rand64_init_with_file(const char *file_path);
+
 #endif // RAND64_SW_H

@@ -5,6 +5,14 @@
 /* Input stream containing random bytes.  */
 FILE *urandstream;
 
+void software_rand64_init_with_file(const char *file_path) {
+    urandstream = fopen(file_path, "r");
+    if (!urandstream) {
+        perror("Failed to open random source file");
+        abort();
+    }
+}
+
 /* Initialize the software rand64 implementation.  */
 void software_rand64_init (void)
 {
