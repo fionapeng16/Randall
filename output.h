@@ -5,11 +5,15 @@
 #include <limits.h>
 #include <errno.h>
 #include <stdbool.h>
+#include <string.h>
+
+#include "rand64-hw.h"
+#include "rand64-sw.h"
 
 // Function to output bytes.
 bool writebytes(unsigned long long x, int nbytes);
 
 // Function to handle the output process
-int handle_output(long long nbytes, unsigned long long (*rand64)(void));
+int handle_output(char *input, char *output, long long nbytes);
 
 #endif // OUTPUT_H
