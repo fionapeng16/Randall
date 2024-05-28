@@ -31,12 +31,12 @@ int handle_output(char *input, char *output, long long nbytes) {
 	
    } else if (strcmp(input, "lrand48_r") == 0) {
         // Handles lrand48_r case
-        initialize = software_rand64_init;
-        rand64 = software_rand64;         
-        finalize = software_rand64_fini;
+        lrand48_init();
+        rand64 = lrand48_rand64;         
+        finalize = lrand48_fini;
    } else if (strncmp(input, "/", 1) == 0) {  // Check if input starts with '/'
         // Handle /F case.
-        initialize = software_rand64_init_with_file(input);
+        software_rand64_init_with_file(input);
         rand64 = software_rand64;
         finalize = software_rand64_fini;
    } else {
