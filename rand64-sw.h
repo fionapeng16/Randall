@@ -16,12 +16,14 @@ unsigned long long software_rand64 (void);
 
 void software_rand64_fini (void);
 
-void software_rand64_init_with_file(const char *file_path);
-
 void lrand48_init();
 
 unsigned long long lrand48_rand64();
 
 void lrand48_fini();
+
+void software_rand64_init_with_file(void);
+
+void set_global_file_path(const char* file_path);
 
 #endif // RAND64_SW_H

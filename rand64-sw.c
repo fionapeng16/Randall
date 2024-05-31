@@ -2,15 +2,25 @@
 
 /* Software implementation.  */
 
+
 /* Input stream containing random bytes.  */
 FILE *urandstream;
+static const char* global_file_path = NULL;
 
-void software_rand64_init_with_file(const char *file_path) {
-    urandstream = fopen(file_path, "r");
+void software_rand64_init_with_file(void) {
+    if (!global_file_path) {
+        fprintf(stderr, "No file path set for initialization.\n");
+        abort();
+    }
+    urandstream = fopen(global_file_path, "r");
     if (!urandstream) {
         perror("Failed to open random source file");
         abort();
     }
+}
+
+void set_global_file_path(const char* file_path) {
+    global_file_path = file_path;
 }
 
 /* Initialize the software rand64 implementation.  */
